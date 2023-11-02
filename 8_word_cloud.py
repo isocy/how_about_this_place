@@ -9,7 +9,7 @@ import gdown
 from wordcloud import WordCloud
 
 
-LANDMARK_IDX = 64
+LANDMARK_IDX = 23  # -2 in df_all.csv
 
 font_path = 'fonts/malgun.ttf'
 

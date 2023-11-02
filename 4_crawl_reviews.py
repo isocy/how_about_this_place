@@ -40,7 +40,7 @@ if not os.path.isdir('./crawling_data/'):
 
 REFRESH_INTERVAL = 10
 REVIEW_CNT_MAX = 150
-URL_START_IDX = 124
+URL_START_IDX = 419
 
 countries = []
 cities = []
@@ -53,8 +53,13 @@ for landmark_url in landmark_urls[URL_START_IDX:]:
     actions = ActionChains(driver)
     actions.send_keys(Keys.PAGE_DOWN).perform()
     
-    a_elements = driver.find_elements(By.CLASS_NAME, 'gl-component-bread-crumb_item')
-    country = a_elements[3].text
+    while True:  # infinite loop for a elements loading
+        a_elements = driver.find_elements(By.CLASS_NAME, 'gl-component-bread-crumb_item')
+        try:
+            country = a_elements[3].text
+        except IndexError:
+            continue
+        break
     city = a_elements[-2].text
     landmark = a_elements[-1].text
     
@@ -73,7 +78,12 @@ for landmark_url in landmark_urls[URL_START_IDX:]:
                     btn_element = div_element.find_element(By.CSS_SELECTOR, 'button[class=\'btn-next \'')
                 except NoSuchElementException:
                     break
-                btn_element.click()
+                while True:  # infinite loop for button click
+                    try:
+                        btn_element.click()
+                    except ElementClickInterceptedException:
+                        continue
+                    break
                 
                 start_cnt = time.perf_counter()
             continue

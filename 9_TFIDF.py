@@ -22,4 +22,4 @@ if not os.path.isdir('objects/'):
     os.mkdir('objects/')
 
 dump(tfidf_vectorizer, 'objects/tfidf_vectorizer.joblib')
-mmwrite('objects/tfidf_movie_morpheme.mtx', tfidf_matrix)
+mmwrite('objects/matrix_movie_morpheme.mtx', tfidf_matrix)

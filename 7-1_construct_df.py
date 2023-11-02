@@ -16,17 +16,14 @@ with open('crawling_data/landmark_list.txt', 'rt', encoding='utf-8') as f:
 with open('data/refined_div_review_list.txt', 'rt', encoding='utf-8') as f:
     reviews = f.read().splitlines()
 
-# should be removed later
-# countries = countries[:125]
-# cities = cities[:125]
-# landmarks = landmarks[:125]
-
 df_landmark_review = pd.DataFrame({
     'country': countries,
     'city': cities,
     'landmark': landmarks,
     'review': reviews
 })
+df_landmark_review.drop_duplicates(subset='landmark', inplace=True, keep='first')
+df_landmark_review.info()
 
 if not os.path.isdir('datasets/'):
     os.mkdir('datasets/')
