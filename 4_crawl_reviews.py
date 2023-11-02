@@ -66,7 +66,6 @@ for landmark_url in landmark_urls[URL_START_IDX:]:
         # review paragraph elements
         p_elements = driver.find_elements(By.CSS_SELECTOR, 'p[class*=\'hover-pointer \']')
         if not p_elements or p_elements[0] == prev_p_element:
-            print(1)
             if time.perf_counter() - start_cnt > REFRESH_INTERVAL:  # at least 10s
                 # press the next button
                 div_element = driver.find_element(By.CSS_SELECTOR, 'div[class=\'gl-cpt-pagination \']')
@@ -103,7 +102,6 @@ for landmark_url in landmark_urls[URL_START_IDX:]:
             try:
                 btn_element.click()
             except ElementClickInterceptedException:
-                print(3)
                 continue
             break
         
