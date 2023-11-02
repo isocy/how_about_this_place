@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>919</width>
-    <height>642</height>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,13 @@
      <x>30</x>
      <y>30</y>
      <width>131</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit">
@@ -29,7 +34,7 @@
      <x>180</x>
      <y>30</y>
      <width>561</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="font">
@@ -50,8 +55,13 @@
      <x>760</x>
      <y>30</y>
      <width>131</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>추천!</string>
@@ -60,10 +70,10 @@
   <widget class="QLabel" name="label_res">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>80</y>
-     <width>821</width>
-     <height>521</height>
+     <x>80</x>
+     <y>110</y>
+     <width>751</width>
+     <height>381</height>
     </rect>
    </property>
    <property name="font">
@@ -73,6 +83,31 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_loading">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>250</y>
+     <width>451</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>굴림</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

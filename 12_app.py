@@ -24,31 +24,65 @@ class Exam(QWidget, form_window):
 
         self.tfidf_matrix = mmread('./objects/matrix_landmark_morpheme.mtx').tocsr()
         self.tfidf_vectorizer = load('./objects/tfidf_vectorizer.joblib')
-        self.embedding_model = Word2Vec.load('./models/word2vec.model')
+        self.embedding_model = Word2Vec.load('./models/word2vec_review.model')
 
         self.df = pd.read_csv('./datasets/df_all.csv')
-        self.df_selected = None
-        self.countries = set(self.df['country'])
-        
-        self.comboBox.addItem('모든 나라')
+
+        self.RECOMMENDATION_CNT = 10
+
+        self.countries = list(set(self.df['country']))
+        self.countries.sort()
+
+        self.str_all_countries = '모든 나라'
+        self.comboBox.addItem(self.str_all_countries)
         for country in self.countries:
             self.comboBox.addItem(country)
 
         self.pushButton.clicked.connect(self.pushbutton_slot)
 
     def pushbutton_slot(self):
+        self.label_res.setText('')
+        self.label_loading.setText('로딩 중...')
+
         lineedit_str = self.lineEdit.text()
         length = len(lineedit_str.split())
         if length == 0:
+            self.label_loading.setText('')
             return
         elif length == 1:
-            recommendation = self.recommend_by_keyword(lineedit_str)
+            idx_list = self.recommend_by_keyword(lineedit_str)
+            print(idx_list)
         else:
-            recommendation = self.recommend_by_sentence(lineedit_str)
-        if isinstance(recommendation, str):
-            self.label_res.setText(recommendation)
+            idx_list = self.recommend_by_sentence(lineedit_str)
+
+        res_str = ''
+        if self.comboBox.currentText() != self.str_all_countries:
+            country = self.comboBox.currentText()
+            idx_10 = []
+            idx_cnt = 0
+            for landmark_idx in idx_list:
+                if country == self.df.iloc[landmark_idx, 0]:
+                    idx_10.append(landmark_idx)
+                    idx_cnt += 1
+                    if idx_cnt == self.RECOMMENDATION_CNT:
+                        break
+
+            for landmark_idx in idx_10:
+                landmark_row = self.df.iloc[landmark_idx, 1:3]
+                res_str = res_str + ' / '.join(landmark_row) + '\n'
         else:
-            self.label_res.setText('\n'.join(recommendation))
+            idx_10 = idx_list[:min(len(idx_list), self.RECOMMENDATION_CNT)]
+
+            for landmark_idx in idx_10:
+                landmark_row = self.df.iloc[landmark_idx, :3]
+                res_str = res_str + ' / '.join(landmark_row) + '\n'
+
+        if not idx_10:
+            self.label_loading.setText('다른 단어를 입력하거나 문장을 입력해주세요.')
+            return
+
+        self.label_loading.setText('')
+        self.label_res.setText(res_str)
 
     def recommend_by_sentence(self, sentence):
         if not os.path.isfile('data/stopwords.csv'):
@@ -87,14 +121,13 @@ class Exam(QWidget, form_window):
         sentence_vec = self.tfidf_vectorizer.transform([sim_sentence])
         cosine_sim = linear_kernel(sentence_vec, self.tfidf_matrix)
         landmark_idx = self.recommendation(cosine_sim)
-        landmark_list = self.df.iloc[landmark_idx, 2]
-        return landmark_list
+        return landmark_idx
 
     def recommend_by_keyword(self, keyword):
         try:
-            sim_word = self.embedding_model.wv.most_similar(keyword, topn=10)
-        except:
-            return 'Use another keyword'
+            sim_word = self.embedding_model.wv.most_similar(keyword, topn=9)
+        except KeyError:
+            return []
         words = [keyword]
         for word, _ in sim_word:
             words.append(word)
@@ -107,14 +140,19 @@ class Exam(QWidget, form_window):
         sentence = ' '.join(sentence)
         sentence_vec = self.tfidf_vectorizer.transform([sentence])
         cosine_sim = linear_kernel(sentence_vec, self.tfidf_matrix)
-        recommendation = self.get_recommendation(cosine_sim)
-        return recommendation
+        landmark_idx = self.recommendation(cosine_sim)
+        return landmark_idx
 
     def recommendation(self, cos_sim):
         sim_score = list(enumerate(cos_sim[-1]))
         sim_score = sorted(sim_score, key=lambda x: x[1], reverse=True)
-        sim_score_10 = sim_score[1:]
-        idx_list = [i[0] for i in sim_score_10]
+        sim_score = sim_score[1:]
+        end_idx = 0
+        for t in sim_score:
+            if t[1] < 0.05:
+                break
+            end_idx += 1
+        idx_list = [t[0] for t in sim_score[:end_idx]]
         return idx_list
 
 
