@@ -1,14 +1,18 @@
 import os
 
+import pandas as pd
 from gensim.models import Word2Vec
 
 
-if not os.path.isfile('data/refined_div_review_list.txt'):
-    with open('6_refine_morphemes.py', 'rt') as f:
-        exec(f.read())
+# if not os.path.isfile('data/refined_div_review_list.txt'):
+#     with open('6_refine_morphemes.py', 'rt') as f:
+#         exec(f.read())
+#
+# with open('data/refined_div_review_list.txt', 'rt', encoding='utf-8') as f:
+#     div_review_list = f.read().splitlines()
 
-with open('data/refined_div_review_list.txt', 'rt', encoding='utf-8') as f:
-    div_review_list = f.read().splitlines()
+df = pd.read_csv('datasets/df_all.csv')
+div_review_list = list(df['review'])
 
 tokens = []
 for div_review in div_review_list:
