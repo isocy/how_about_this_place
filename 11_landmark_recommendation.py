@@ -30,7 +30,7 @@ tfidf_vectorizer = load('objects/tfidf_vectorizer.joblib')
 
 # Recommendation based on keyword
 embedding_model = Word2Vec.load('models/word2vec_review.model')
-keyword = '뷁'
+keyword = '동양'
 sim_word = embedding_model.wv.most_similar(keyword, topn=10)
 print(sim_word)
 words = [keyword]
