@@ -6,11 +6,13 @@ import pandas as pd
 import gdown
 
 
-if not os.path.isfile('data/div_review_list.json'):
-    with open('5_review_to_morphemes.py', 'rt') as f:
-        exec(f.read())
+# if not os.path.isfile('data/div_review_list.json'):
+#     with open('5_review_to_morphemes.py', 'rt') as f:
+#         exec(f.read())
 
-with open('data/div_review_list.json', 'rt') as f:
+category = 'asia'
+
+with open('data/div_review_list_{}.json'.format(category), 'rt') as f:
     div_review_list = json.load(f)
 
 if not os.path.isfile('data/stopwords.csv'):
@@ -34,6 +36,6 @@ for review_idx in range(len(div_review_list)):
 
     div_review_list[review_idx] = ' '.join(morphemes)
 
-with open('data/refined_div_review_list.txt', 'wt', encoding='utf-8') as f:
+with open('data/refined_div_review_list_{}.txt'.format(category), 'wt', encoding='utf-8') as f:
     for review in div_review_list:
         f.write('%s\n' % review)

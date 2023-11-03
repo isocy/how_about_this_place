@@ -10,6 +10,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import *
 
+from tqdm import tqdm
+
 
 if not os.path.isfile('./paths/chrome_driver_path.txt'):
     with open('1_install_Chrome_driver.py', 'rt') as file:
@@ -28,7 +30,7 @@ driver = webdriver.Chrome(service=service, options=options)
 
 
 try:
-    with open('crawling_data/distinct_website_addresses_for_landmarks.txt', 'rt') as f:
+    with open('crawling_data/distinct_website_addresses_for_landmarks_asia2.txt', 'rt') as f:
         landmark_urls = f.read().splitlines()
 except FileNotFoundError:
     with open('3-2_remove_duplicate_landmarks.py', 'rt') as f:
@@ -40,14 +42,14 @@ if not os.path.isdir('./crawling_data/'):
 
 REFRESH_INTERVAL = 10
 REVIEW_CNT_MAX = 150
-URL_START_IDX = 419
+URL_START_IDX = 153
 
 countries = []
 cities = []
 landmarks = []
 review_concats = []
 
-for landmark_url in landmark_urls[URL_START_IDX:]:
+for landmark_url in tqdm(landmark_urls[URL_START_IDX:],desc='리뷰 따는 중'):
     driver.get(landmark_url)
     
     actions = ActionChains(driver)
@@ -123,13 +125,13 @@ for landmark_url in landmark_urls[URL_START_IDX:]:
     review_concats.append(review_concat)
     
     # temporal save
-    with open('./crawling_data/country_list.txt', 'at', encoding='utf-8') as f:
+    with open('./crawling_data/country_list_asia2.txt', 'at', encoding='utf-8') as f:
         f.write('%s\n' % country)
-    with open('./crawling_data/city_list.txt', 'at', encoding='utf-8') as f:
+    with open('./crawling_data/city_list_asia2.txt', 'at', encoding='utf-8') as f:
         f.write('%s\n' % city)
-    with open('./crawling_data/landmark_list.txt', 'at', encoding='utf-8') as f:
+    with open('./crawling_data/landmark_list_asia2.txt', 'at', encoding='utf-8') as f:
         f.write('%s\n' % landmark)
-    with open('./crawling_data/review_list.txt', 'at', encoding='utf-8') as f:
+    with open('./crawling_data/review_list_asia2.txt', 'at', encoding='utf-8') as f:
         f.write('%s\n' % review_concat)
 
 
