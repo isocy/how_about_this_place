@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 from gensim.models import Word2Vec
-
+from tqdm import tqdm
 
 # if not os.path.isfile('data/refined_div_review_list.txt'):
 #     with open('6_refine_morphemes.py', 'rt') as f:
@@ -15,7 +15,7 @@ df = pd.read_csv('datasets/df_all.csv')
 div_review_list = list(df['review'])
 
 tokens = []
-for div_review in div_review_list:
+for div_review in tqdm(div_review_list,desc='Tokenizer'):
     token = div_review.split()
     tokens.append(token)
 
